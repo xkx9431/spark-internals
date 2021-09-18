@@ -15,7 +15,7 @@ With some skills: Microservices Pattern, React, NodeJs, Java, Python, MQ, gRPC, 
 本项目是基于 [jaceklaskowski apache-spark-internals](https://github.com/japila-books/apache-spark-internals)，已经得到原作者许可。
 不得用于任何商业用途， 欢迎star, PR. 共学习，共进步。
 
-让我们开始学习吧[{{ book.title }}](overview.md) 🔥
+让我们开始学习[{{ book.title }}](overview.md)吧🔥
 
 ---
 
