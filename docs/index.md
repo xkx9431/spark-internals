@@ -17,3 +17,6 @@ With some skills: Microservices Pattern, React, NodeJs, Java, Python, MQ, gRPC, 
 
 让我们开始学习吧[{{ book.title }}](overview.md) 🔥
 
+---
+
+<small>Last update: {{ git.date.strftime('%Y-%m-%d') }}</small>
