@@ -1,10 +1,10 @@
 site_name: Apache Spark 源码解读 
-site_url: https://xkx9431.github.io/spark-internal/
+site_url: https://xkx9431.github.io/spark-internals/
 site_author: xkx | 許凯旋
 site_description: Spark 源码解读，内核原理.
 
-repo_name: spark-internal
-repo_url: https://github.com/xkx9431/spark-internal
+repo_name: spark-internals
+repo_url: https://github.com/xkx9431/spark-internals
 edit_uri: edit/main/docs/
 
 copyright: Copyright &copy; 2021 XKX
