@@ -1,0 +1,596 @@
+site_name: Apache Spark 源码解读 
+site_url: https://xkx9431.github.io/spark-internal/
+site_author: xkx | 許凯旋
+site_description: Spark 源码解读，内核原理.
+
+repo_name: spark-internal
+repo_url: https://github.com/xkx9431/spark-internal
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2021 XKX
+
+theme:
+  name: material
+  icon:
+    logo: material/book-open-page-variant
+    repo: fontawesome/brands/github
+  features:
+  # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#adding-annotations
+  - content.code.annotate
+  - navigation.indexes
+  - navigation.instant
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.share
+  - search.suggest
+  palette:
+  - scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch-off-outline
+      name: Switch to dark mode
+  - scheme: slate
+    primary: blue
+    accent: blue
+    toggle:
+      icon: material/toggle-switch
+      name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.tilde
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+  - awesome-pages
+  - macros
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/
+  # - tags:
+  #     tags_file: tags.md
+
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  book:
+    title: Apache Spark
+    spark_k8s: https://jaceklaskowski.github.io/spark-kubernetes-book
+    spark_sql: https://jaceklaskowski.github.io/mastering-spark-sql-book
+    structured_streaming: https://jaceklaskowski.github.io/spark-structured-streaming-book
+  codahale:
+    home: https://metrics.dropwizard.io/4.2.0
+    api: https://www.javadoc.io/static/io.dropwizard.metrics/metrics-core/4.2.0
+  hadoop:
+    version: 3.3.1
+    docs: https://hadoop.apache.org/docs/r3.3.1
+    api: https://hadoop.apache.org/docs/r3.3.1/api
+  jackson:
+    api: https://fasterxml.github.io/jackson-databind/javadoc/2.12
+  java:
+    api: https://docs.oracle.com/en/java/javase/11/docs/api
+  scala:
+    api: https://www.scala-lang.org/api/2.12.14
+    docs: https://docs.scala-lang.org/
+    spec: https://www.scala-lang.org/files/archive/spec/2.12
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/xkx9431
+    - icon: fontawesome/brands/zhihu
+      link: https://www.zhihu.com/people/triumphxu
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/%E5%87%AF%E6%97%8B-%E8%A8%B1-983884103/
+    # - icon: fontawesome/brands/blog
+    #   link: https://xkx9431.github.io/xkx_blog/
+  spark:
+    version: 3.2.0 (RC2)
+    github: https://github.com/apache/spark/tree/v3.2.0-rc2
+
+nav:
+  - Home: index.md
+  - Internals:
+    - Overview: overview.md
+    - Tags: tags.md
+    - SparkEnv: SparkEnv.md
+    - SparkConf: SparkConf.md
+    - SparkContext: SparkContext.md
+    - Local Properties: local-properties.md
+    - Inside Creating SparkContext: SparkContext-creating-instance-internals.md
+    - SparkStatusTracker: SparkStatusTracker.md
+    - SparkFiles: SparkFiles.md
+    - Configuration Properties: configuration-properties.md
+    - Spark Properties: spark-properties.md
+    - External Shuffle Service:
+      - external-shuffle-service/index.md
+      - Configuration Properties: external-shuffle-service/configuration-properties.md
+      - ExternalShuffleService: external-shuffle-service/ExternalShuffleService.md
+      - ExternalBlockHandler: external-shuffle-service/ExternalBlockHandler.md
+      - ExternalShuffleBlockResolver: external-shuffle-service/ExternalShuffleBlockResolver.md
+      - ExecutorShuffleInfo: external-shuffle-service/ExecutorShuffleInfo.md
+    - MapOutputTracker:
+      - MapOutputTracker: scheduler/MapOutputTracker.md
+      - MapOutputTrackerMaster: scheduler/MapOutputTrackerMaster.md
+      - MapOutputTrackerMasterEndpoint: scheduler/MapOutputTrackerMasterEndpoint.md
+      - MapOutputTrackerWorker: scheduler/MapOutputTrackerWorker.md
+      - ShuffleStatus: scheduler/ShuffleStatus.md
+    - Shuffle System:
+      - shuffle/index.md
+      - BaseShuffleHandle: shuffle/BaseShuffleHandle.md
+      - BlockStoreShuffleReader: shuffle/BlockStoreShuffleReader.md
+      - BypassMergeSortShuffleHandle: shuffle/BypassMergeSortShuffleHandle.md
+      - BypassMergeSortShuffleWriter: shuffle/BypassMergeSortShuffleWriter.md
+      - DownloadFileManager: shuffle/DownloadFileManager.md
+      - FetchFailedException: shuffle/FetchFailedException.md
+      - IndexShuffleBlockResolver: shuffle/IndexShuffleBlockResolver.md
+      - MigratableResolver: shuffle/MigratableResolver.md
+      - SerializedShuffleHandle: shuffle/SerializedShuffleHandle.md
+      - ShuffleBlockResolver: shuffle/ShuffleBlockResolver.md
+      - ShuffleExternalSorter: shuffle/ShuffleExternalSorter.md
+      - ShuffleHandle: shuffle/ShuffleHandle.md
+      - ShuffleInMemorySorter: shuffle/ShuffleInMemorySorter.md
+      - ShuffleManager: shuffle/ShuffleManager.md
+      - ShuffleReader: shuffle/ShuffleReader.md
+      - ShuffleWriteMetricsReporter: shuffle/ShuffleWriteMetricsReporter.md
+      - ShuffleWriteProcessor: shuffle/ShuffleWriteProcessor.md
+      - ShuffleWriter: shuffle/ShuffleWriter.md
+      - SortShuffleManager: shuffle/SortShuffleManager.md
+      - SortShuffleWriter: shuffle/SortShuffleWriter.md
+      - UnsafeShuffleWriter: shuffle/UnsafeShuffleWriter.md
+      - Spillable Collections:
+        - Spillable: shuffle/Spillable.md
+        - ExternalAppendOnlyMap: shuffle/ExternalAppendOnlyMap.md
+        - ExternalSorter: shuffle/ExternalSorter.md
+      - ShuffleDataIOs:
+        - ShuffleDataIO: shuffle/ShuffleDataIO.md
+        - LocalDiskShuffleDataIO: shuffle/LocalDiskShuffleDataIO.md
+        - ShuffleDriverComponents: shuffle/ShuffleDriverComponents.md
+        - ShuffleExecutorComponents: shuffle/ShuffleExecutorComponents.md
+        - ShuffleMapOutputWriter: shuffle/ShuffleMapOutputWriter.md
+        - LocalDiskShuffleMapOutputWriter: shuffle/LocalDiskShuffleMapOutputWriter.md
+        - ExecutorDiskUtils: shuffle/ExecutorDiskUtils.md
+        - SingleSpillShuffleMapOutputWriter: shuffle/SingleSpillShuffleMapOutputWriter.md
+        - LocalDiskShuffleExecutorComponents: shuffle/LocalDiskShuffleExecutorComponents.md
+        - LocalDiskSingleSpillMapOutputWriter: shuffle/LocalDiskSingleSpillMapOutputWriter.md
+        - ShuffleDataIOUtils: shuffle/ShuffleDataIOUtils.md
+    - Dynamic Resource Allocation:
+      - dynamic-allocation/index.md
+      - Configuration Properties: dynamic-allocation/configuration-properties.md
+      - ExecutorAllocationManager: dynamic-allocation/ExecutorAllocationManager.md
+      - ExecutorMonitor: dynamic-allocation/ExecutorMonitor.md
+      - Tracker: dynamic-allocation/Tracker.md
+      - ExecutorAllocationClient: dynamic-allocation/ExecutorAllocationClient.md
+      - ExecutorAllocationManagerSource: dynamic-allocation/ExecutorAllocationManagerSource.md
+      - ExecutorAllocationListener: dynamic-allocation/ExecutorAllocationListener.md
+    - Network:
+      - TransportContext: network/TransportContext.md
+      - MessageHandler: network/MessageHandler.md
+      - TransportRequestHandler: network/TransportRequestHandler.md
+      - TransportConf: network/TransportConf.md
+      - SparkTransportConf: network/SparkTransportConf.md
+      - TransportClientFactory: network/TransportClientFactory.md
+      - TransportServer: network/TransportServer.md
+      - RpcHandler: network/RpcHandler.md
+      - StreamManager: network/StreamManager.md
+      - OneForOneStreamManager: network/OneForOneStreamManager.md
+      - ManagedBuffer: network/ManagedBuffer.md
+      - RpcResponseCallback: network/RpcResponseCallback.md
+    - Core:
+      - ContextCleaner: core/ContextCleaner.md
+      - CleanerListener: core/CleanerListener.md
+      - BlockFetchingListener: core/BlockFetchingListener.md
+      - RetryingBlockFetcher: core/RetryingBlockFetcher.md
+      - BlockFetchStarter: core/BlockFetchStarter.md
+      - KVStore: core/KVStore.md
+      - InMemoryStore: core/InMemoryStore.md
+      - LevelDB: core/LevelDB.md
+    - OutputCommitCoordinator: OutputCommitCoordinator.md
+    - Scheduler:
+      - scheduler/index.md
+      - DAGScheduler: scheduler/DAGScheduler.md
+      - Stage: scheduler/Stage.md
+      - ResultStage: scheduler/ResultStage.md
+      - ShuffleMapStage: scheduler/ShuffleMapStage.md
+      - BlacklistTracker: scheduler/BlacklistTracker.md
+      - StageInfo: scheduler/StageInfo.md
+      - JobListener: scheduler/JobListener.md
+      - JobWaiter: scheduler/JobWaiter.md
+      - TaskScheduler: scheduler/TaskScheduler.md
+      - TaskSchedulerImpl: scheduler/TaskSchedulerImpl.md
+      - SchedulerBackend: scheduler/SchedulerBackend.md
+      - CoarseGrainedSchedulerBackend: scheduler/CoarseGrainedSchedulerBackend.md
+      - DriverEndpoint: scheduler/DriverEndpoint.md
+      - SchedulerBackendUtils: scheduler/SchedulerBackendUtils.md
+      - Task: scheduler/Task.md
+      - ShuffleMapTask: scheduler/ShuffleMapTask.md
+      - ResultTask: scheduler/ResultTask.md
+      - TaskSet: scheduler/TaskSet.md
+      - TaskSetManager: scheduler/TaskSetManager.md
+      - ActiveJob: scheduler/ActiveJob.md
+      - SchedulableBuilder: scheduler/SchedulableBuilder.md
+      - FIFOSchedulableBuilder: scheduler/FIFOSchedulableBuilder.md
+      - FairSchedulableBuilder: scheduler/FairSchedulableBuilder.md
+      - Schedulable: scheduler/Schedulable.md
+      - Pool: scheduler/Pool.md
+      - SchedulingMode: scheduler/SchedulingMode.md
+      - TaskInfo: scheduler/TaskInfo.md
+      - MapStatuses:
+        - MapStatus: scheduler/MapStatus.md
+        - CompressedMapStatus: scheduler/CompressedMapStatus.md
+        - HighlyCompressedMapStatus: scheduler/HighlyCompressedMapStatus.md
+      - TaskDescription: scheduler/TaskDescription.md
+      - TaskResultGetter: scheduler/TaskResultGetter.md
+      - TaskContext: scheduler/TaskContext.md
+      - BarrierTaskContext: scheduler/BarrierTaskContext.md
+      - TaskContextImpl: scheduler/TaskContextImpl.md
+      - TaskResult: scheduler/TaskResult.md
+      - TaskSetBlacklist: scheduler/TaskSetBlacklist.md
+      - TaskLocation: scheduler/TaskLocation.md
+      - ExternalClusterManager: scheduler/ExternalClusterManager.md
+      - LiveListenerBus: scheduler/LiveListenerBus.md
+      - DAGSchedulerEvent: scheduler/DAGSchedulerEvent.md
+      - DAGSchedulerEventProcessLoop: scheduler/DAGSchedulerEventProcessLoop.md
+      - DAGSchedulerSource: scheduler/DAGSchedulerSource.md
+      - ExecutorData: scheduler/ExecutorData.md
+    - RPC:
+      - rpc/index.md
+      - RpcEnv: rpc/RpcEnv.md
+      - NettyRpcEnv: rpc/NettyRpcEnv.md
+      - NettyStreamManager: rpc/NettyStreamManager.md
+      - RpcEnvConfig: rpc/RpcEnvConfig.md
+      - RpcEndpoint: rpc/RpcEndpoint.md
+      - RpcEndpointRef: rpc/RpcEndpointRef.md
+      - RpcAddress: rpc/RpcAddress.md
+      - RpcEndpointAddress: rpc/RpcEndpointAddress.md
+      - RpcEnvFactory: rpc/RpcEnvFactory.md
+      - NettyRpcEnvFactory: rpc/NettyRpcEnvFactory.md
+      - RpcEnvFileServer: rpc/RpcEnvFileServer.md
+      - spark-rpc-netty: rpc/spark-rpc-netty.md
+      - RpcUtils: rpc/RpcUtils.md
+    - Memory:
+      - memory/index.md
+      - BytesToBytesMap: memory/BytesToBytesMap.md
+      - ExecutionMemoryPool: memory/ExecutionMemoryPool.md
+      - MemoryAllocator: memory/MemoryAllocator.md
+      - MemoryConsumer: memory/MemoryConsumer.md
+      - MemoryManager: memory/MemoryManager.md
+      - MemoryPool: memory/MemoryPool.md
+      - StorageMemoryPool: memory/StorageMemoryPool.md
+      - TaskMemoryManager: memory/TaskMemoryManager.md
+      - UnifiedMemoryManager: memory/UnifiedMemoryManager.md
+      - UnsafeExternalSorter: memory/UnsafeExternalSorter.md
+      - UnsafeInMemorySorter: memory/UnsafeInMemorySorter.md
+      - UnsafeSorterSpillReader: memory/UnsafeSorterSpillReader.md
+      - UnsafeSorterSpillWriter: memory/UnsafeSorterSpillWriter.md
+    - Storage:
+      - storage/index.md
+      - BlockData: storage/BlockData.md
+      - BlockDataManager: storage/BlockDataManager.md
+      - BlockEvictionHandler: storage/BlockEvictionHandler.md
+      - BlockId: storage/BlockId.md
+      - BlockInfo: storage/BlockInfo.md
+      - BlockInfoManager: storage/BlockInfoManager.md
+      - BlockManager: storage/BlockManager.md
+      - BlockManagerDecommissioner: storage/BlockManagerDecommissioner.md
+      - BlockManagerStorageEndpoint: storage/BlockManagerStorageEndpoint.md
+      - BlockManagerId: storage/BlockManagerId.md
+      - BlockManagerInfo: storage/BlockManagerInfo.md
+      - BlockManagerMaster: storage/BlockManagerMaster.md
+      - BlockManagerMasterEndpoint: storage/BlockManagerMasterEndpoint.md
+      - BlockManagerMasterHeartbeatEndpoint: storage/BlockManagerMasterHeartbeatEndpoint.md
+      - BlockManagerSlaveEndpoint: storage/BlockManagerSlaveEndpoint.md
+      - BlockManagerSource: storage/BlockManagerSource.md
+      - BlockReplicationPolicy: storage/BlockReplicationPolicy.md
+      - BlockStoreClient: storage/BlockStoreClient.md
+      - BlockStoreUpdater: storage/BlockStoreUpdater.md
+      - BlockTransferService: storage/BlockTransferService.md
+      - ByteBufferBlockStoreUpdater: storage/ByteBufferBlockStoreUpdater.md
+      - DiskBlockObjectWriter: storage/DiskBlockObjectWriter.md
+      - DiskStore: storage/DiskStore.md
+      - DiskBlockManager: storage/DiskBlockManager.md
+      - ExternalBlockStoreClient: storage/ExternalBlockStoreClient.md
+      - FallbackStorage: storage/FallbackStorage.md
+      - MemoryStore: storage/MemoryStore.md
+      - ShuffleMetricsSource: storage/ShuffleMetricsSource.md
+      - NettyBlockTransferService: storage/NettyBlockTransferService.md
+      - NettyBlockRpcServer: storage/NettyBlockRpcServer.md
+      - OneForOneBlockFetcher: storage/OneForOneBlockFetcher.md
+      - RandomBlockReplicationPolicy: storage/RandomBlockReplicationPolicy.md
+      - RDDInfo: storage/RDDInfo.md
+      - ShuffleBlockFetcherIterator: storage/ShuffleBlockFetcherIterator.md
+      - ShuffleFetchCompletionListener: storage/ShuffleFetchCompletionListener.md
+      - ShuffleMigrationRunnable: storage/ShuffleMigrationRunnable.md
+      - StorageLevel: storage/StorageLevel.md
+      - StorageStatus: storage/StorageStatus.md
+      - StorageUtils: storage/StorageUtils.md
+      - TempFileBasedBlockStoreUpdater: storage/TempFileBasedBlockStoreUpdater.md
+    - Serialization:
+      - serializer/index.md
+      - DeserializationStream: serializer/DeserializationStream.md
+      - JavaSerializerInstance: serializer/JavaSerializerInstance.md
+      - KryoSerializer: serializer/KryoSerializer.md
+      - KryoSerializerInstance: serializer/KryoSerializerInstance.md
+      - SerializationStream: serializer/SerializationStream.md
+      - Serializer: serializer/Serializer.md
+      - SerializerInstance: serializer/SerializerInstance.md
+      - SerializerManager: serializer/SerializerManager.md
+    - Executor:
+      - Executor: executor/Executor.md
+      - TaskRunner: executor/TaskRunner.md
+      - ExecutorSource: executor/ExecutorSource.md
+      - ExecutorBackend: executor/ExecutorBackend.md
+      - CoarseGrainedExecutorBackend: executor/CoarseGrainedExecutorBackend.md
+      - TaskMetrics: executor/TaskMetrics.md
+      - ShuffleWriteMetrics: executor/ShuffleWriteMetrics.md
+      - ShuffleReadMetrics: executor/ShuffleReadMetrics.md
+      - ExecutorLogUrlHandler: executor/ExecutorLogUrlHandler.md
+      - ExecutorMetricsPoller: executor/ExecutorMetricsPoller.md
+    - Barrier Execution Mode:
+      - barrier-execution-mode: barrier-execution-mode.md
+      - RDDBarrier: RDDBarrier.md
+    - Speculative Execution of Tasks: speculative-execution-of-tasks.md
+    - Deployment Architecture:
+      - Architecture: architecture.md
+      - Driver: driver.md
+      - Master: master.md
+      - Workers: workers.md
+    - Internal IO:
+      - SparkHadoopWriter: SparkHadoopWriter.md
+      - HadoopWriteConfigUtil: HadoopWriteConfigUtil.md
+      - FileCommitProtocol: FileCommitProtocol.md
+      - HadoopMapReduceCommitProtocol: HadoopMapReduceCommitProtocol.md
+      - HadoopMapRedCommitProtocol: HadoopMapRedCommitProtocol.md
+      - HadoopMapReduceWriteConfigUtil: HadoopMapReduceWriteConfigUtil.md
+      - HadoopMapRedWriteConfigUtil: HadoopMapRedWriteConfigUtil.md
+    - Stage-Level Scheduling:
+      - stage-level-scheduling/index.md
+      - ResourceProfile: stage-level-scheduling/ResourceProfile.md
+      - ResourceProfileBuilder: stage-level-scheduling/ResourceProfileBuilder.md
+    - Status:
+      - status/index.md
+      - AppStatusListener: status/AppStatusListener.md
+      - AppStatusSource: status/AppStatusSource.md
+      - AppStatusStore: status/AppStatusStore.md
+      - ElementTrackingStore: status/ElementTrackingStore.md
+      - LiveEntity: status/LiveEntity.md
+    - Misc:
+      - Deployment Environments: spark-deployment-environments.md
+      - Building from Sources: spark-building-from-sources.md
+      - InterruptibleIterator: InterruptibleIterator.md
+      - Deploy Mode: spark-deploy-mode.md
+      - HeartbeatReceiver: HeartbeatReceiver.md
+      - Data Locality: data-locality.md
+      - CompressionCodec: CompressionCodec.md
+      - Utils: Utils.md
+    - Spark Tips and Tricks:
+      - Spark Tips and Tricks: spark-tips-and-tricks.md
+      - Access private members in Scala in Spark shell: spark-tips-and-tricks-access-private-members-spark-shell.md
+      - Task not serializable Exception: spark-tips-and-tricks-sparkexception-task-not-serializable.md
+      - Running Spark Applications on Windows: spark-tips-and-tricks-running-spark-windows.md
+    - Spark Local:
+      - local/index.md
+      - LocalSchedulerBackend: local/LocalSchedulerBackend.md
+      - LocalEndpoint: local/LocalEndpoint.md
+      - LauncherBackend: local/LauncherBackend.md
+  - Shared Variables:
+    - Accumulators:
+      - accumulators/index.md
+      - AccumulatorV2: accumulators/AccumulatorV2.md
+      - AccumulatorContext: accumulators/AccumulatorContext.md
+      - InternalAccumulator: accumulators/InternalAccumulator.md
+      - AccumulatorSource: accumulators/AccumulatorSource.md
+      - AccumulableInfo: accumulators/AccumulableInfo.md
+    - Broadcast Variables:
+      - broadcast-variables/index.md
+      - Broadcast: broadcast-variables/Broadcast.md
+      - BroadcastFactory: broadcast-variables/BroadcastFactory.md
+      - BroadcastManager: broadcast-variables/BroadcastManager.md
+      - TorrentBroadcast: broadcast-variables/TorrentBroadcast.md
+      - TorrentBroadcastFactory: broadcast-variables/TorrentBroadcastFactory.md
+  - Spark Standalone:
+    - spark-standalone/index.md
+    - Configuration Properties: spark-standalone/configuration-properties.md
+    - ClientApp: spark-standalone/ClientApp.md
+    - ClientEndpoint: spark-standalone/ClientEndpoint.md
+    - CreateSubmissionRequest: spark-standalone/CreateSubmissionRequest.md
+    - ExecutorRunner: spark-standalone/ExecutorRunner.md
+    - LocalSparkCluster: spark-standalone/LocalSparkCluster.md
+    - Master: spark-standalone/Master.md
+    - RestSubmissionClient: spark-standalone/RestSubmissionClient.md
+    - RestSubmissionServer: spark-standalone/RestSubmissionServer.md
+    - StandaloneAppClient: spark-standalone/StandaloneAppClient.md
+    - StandaloneAppClientListener: spark-standalone/StandaloneAppClientListener.md
+    - StandaloneRestServer: spark-standalone/StandaloneRestServer.md
+    - StandaloneSchedulerBackend: spark-standalone/StandaloneSchedulerBackend.md
+    - Worker: spark-standalone/Worker.md
+  - Monitoring:
+    - Logging: spark-logging.md
+    - ListenerBus: ListenerBus.md
+    - SparkListener: SparkListener.md
+    - SparkListenerBus: SparkListenerBus.md
+    - SparkListenerEvents:
+      - SparkListenerEvent: SparkListenerEvent.md
+      - SparkListenerTaskEnd: SparkListenerTaskEnd.md
+    - SparkListenerInterface: SparkListenerInterface.md
+    - SpillListener: SpillListener.md
+    - StatsReportListener: StatsReportListener.md
+    - AsyncEventQueue: AsyncEventQueue.md
+    - spark-debugging: spark-debugging.md
+    - ConsoleProgressBar: ConsoleProgressBar.md
+    - TaskCompletionListener: TaskCompletionListener.md
+    - TaskFailureListener: TaskFailureListener.md
+    - Spark History Server:
+      - history-server/index.md
+      - Configuration Properties: history-server/configuration-properties.md
+      - HistoryServer: history-server/HistoryServer.md
+      - HistoryAppStatusStore: history-server/HistoryAppStatusStore.md
+      - HistoryServerDiskManager: history-server/HistoryServerDiskManager.md
+      - EventLoggingListener: history-server/EventLoggingListener.md
+      - SQLHistoryListener: history-server/SQLHistoryListener.md
+      - ApplicationHistoryProvider: history-server/ApplicationHistoryProvider.md
+      - FsHistoryProvider: history-server/FsHistoryProvider.md
+      - HistoryServerArguments: history-server/HistoryServerArguments.md
+      - ApplicationCacheOperations: history-server/ApplicationCacheOperations.md
+      - ApplicationCache: history-server/ApplicationCache.md
+      - ReplayListenerBus: history-server/ReplayListenerBus.md
+      - EventLogFileWriter: history-server/EventLogFileWriter.md
+      - JsonProtocol: history-server/JsonProtocol.md
+    - Status REST API:
+      - rest/index.md
+      - ApiRootResource: rest/ApiRootResource.md
+      - ApplicationListResource: rest/ApplicationListResource.md
+      - OneApplicationResource: rest/OneApplicationResource.md
+      - StagesResource: rest/StagesResource.md
+      - OneApplicationAttemptResource: rest/OneApplicationAttemptResource.md
+      - AbstractApplicationResource: rest/AbstractApplicationResource.md
+      - BaseAppResource: rest/BaseAppResource.md
+      - ApiRequestContext: rest/ApiRequestContext.md
+      - UIRoot: rest/UIRoot.md
+      - UIRootFromServletContext: rest/UIRootFromServletContext.md
+    - Plugin Framework:
+      - plugins/index.md
+      - DriverPlugin: plugins/DriverPlugin.md
+      - DriverPluginContainer: plugins/DriverPluginContainer.md
+      - ExecutorPlugin: plugins/ExecutorPlugin.md
+      - ExecutorPluginContainer: plugins/ExecutorPluginContainer.md
+      - PluginContainer: plugins/PluginContainer.md
+      - PluginContextImpl: plugins/PluginContextImpl.md
+      - SparkPlugin: plugins/SparkPlugin.md
+    - Dropwizard Metrics:
+      - metrics/index.md
+      - Configuration Properties: metrics/configuration-properties.md
+      - MetricsSystem: metrics/MetricsSystem.md
+      - MetricsConfig: metrics/MetricsConfig.md
+      - Source: metrics/Source.md
+      - Sink: metrics/Sink.md
+      - Sources:
+        - JvmSource: metrics/JvmSource.md
+      - Sinks:
+        - MetricsServlet: metrics/MetricsServlet.md
+  - Tools:
+    - spark-submit:
+      - spark-submit: tools/spark-submit.md
+      - SparkSubmit: tools/SparkSubmit.md
+      - SparkSubmitOperation: tools/SparkSubmitOperation.md
+      - SparkSubmitUtils: tools/SparkSubmitUtils.md
+      - SparkApplication: tools/SparkApplication.md
+      - JavaMainApplication: tools/JavaMainApplication.md
+    - spark-shell: tools/spark-shell.md
+    - spark-class: tools/spark-class.md
+    - SparkLauncher: tools/SparkLauncher.md
+    - Internals:
+      - SparkSubmitArguments: tools/SparkSubmitArguments.md
+      - DependencyUtils: tools/DependencyUtils.md
+      - SparkSubmitOptionParser: tools/SparkSubmitOptionParser.md
+      - SparkSubmitCommandBuilder: tools/SparkSubmitCommandBuilder.md
+      - Main: tools/Main.md
+      - AbstractCommandBuilder: tools/AbstractCommandBuilder.md
+  - RDD:
+    - rdd/index.md
+    - CoalescedRDD: rdd/CoalescedRDD.md
+    - CheckpointRDD: rdd/CheckpointRDD.md
+    - CoGroupedRDD: rdd/CoGroupedRDD.md
+    - HadoopRDD: rdd/HadoopRDD.md
+    - LocalCheckpointRDD: rdd/LocalCheckpointRDD.md
+    - MapPartitionsRDD: rdd/MapPartitionsRDD.md
+    - NewHadoopRDD: rdd/NewHadoopRDD.md
+    - ParallelCollectionRDD: rdd/ParallelCollectionRDD.md
+    - RDD: rdd/RDD.md
+    - ReliableCheckpointRDD: rdd/ReliableCheckpointRDD.md
+    - ShuffledRDD: rdd/ShuffledRDD.md
+    - SubtractedRDD: rdd/SubtractedRDD.md
+    - Operators:
+      - Operators: rdd/spark-rdd-operations.md
+      - Transformations: rdd/spark-rdd-transformations.md
+      - OrderedRDDFunctions: rdd/OrderedRDDFunctions.md
+      - PairRDDFunctions: rdd/PairRDDFunctions.md
+      - AsyncRDDActions: rdd/AsyncRDDActions.md
+      - Actions: rdd/spark-rdd-actions.md
+    - Partitioners:
+      - Partitioner: rdd/Partitioner.md
+      - HashPartitioner: rdd/HashPartitioner.md
+      - RangePartitioner: rdd/RangePartitioner.md
+    - RDD Lineage: rdd/spark-rdd-lineage.md
+    - Caching and Persistence: rdd/spark-rdd-caching.md
+    - Partitions and Partitioning: rdd/spark-rdd-partitions.md
+    - Partition: rdd/Partition.md
+    - RDD Checkpointing: rdd/checkpointing.md
+    - RDDCheckpointData: rdd/RDDCheckpointData.md
+    - LocalRDDCheckpointData: rdd/LocalRDDCheckpointData.md
+    - ReliableRDDCheckpointData: rdd/ReliableRDDCheckpointData.md
+    - Shuffling: rdd/spark-rdd-shuffle.md
+    - Dependencies: rdd/Dependency.md
+    - NarrowDependency: rdd/NarrowDependency.md
+    - ShuffleDependency: rdd/ShuffleDependency.md
+    - Aggregator: rdd/Aggregator.md
+  - Demos:
+    - demo/index.md
+    - DiskBlockManager and Block Data: demo/diskblockmanager-and-block-data.md
+    - Exercises:
+      - One-liners using PairRDDFunctions: exercises/spark-exercise-pairrddfunctions-oneliners.md
+      - Learning Jobs and Partitions Using take Action: exercises/spark-exercise-take-multiple-jobs.md
+      - Spark Standalone - Using ZooKeeper for High-Availability of Master: exercises/spark-exercise-standalone-master-ha.md
+      - Spark's Hello World using Spark shell and Scala: exercises/spark-hello-world-using-spark-shell.md
+      - WordCount using Spark shell: exercises/spark-examples-wordcount-spark-shell.md
+      - Your first complete Spark application (using Scala and sbt): exercises/spark-first-app.md
+      - Using Spark SQL to update data in Hive using ORC files: exercises/spark-sql-hive-orc-example.md
+      - Developing Custom SparkListener to monitor DAGScheduler in Scala: exercises/spark-exercise-custom-scheduler-listener.md
+      - Working with Datasets from JDBC Data Sources (and PostgreSQL): exercises/spark-exercise-dataframe-jdbc-postgresql.md
+      - Causing Stage to Fail: exercises/spark-exercise-failing-stage.md
+  - Web UIs:
+    - webui/index.md
+    - Configuration Properties: webui/configuration-properties.md
+    - WebUI: webui/WebUI.md
+    - WebUIPage: webui/WebUIPage.md
+    - WebUITab: webui/WebUITab.md
+    - Spark UI:
+      - SparkUI: webui/SparkUI.md
+      - SparkUITab: webui/SparkUITab.md
+      - Environment:
+        - EnvironmentTab: webui/EnvironmentTab.md
+        - EnvironmentPage: webui/EnvironmentPage.md
+      - Executors:
+        - ExecutorsTab: webui/ExecutorsTab.md
+        - ExecutorsPage: webui/ExecutorsPage.md
+        - ExecutorThreadDumpPage: webui/ExecutorThreadDumpPage.md
+      - Jobs:
+        - JobsTab: webui/JobsTab.md
+        - AllJobsPage: webui/AllJobsPage.md
+        - JobPage: webui/JobPage.md
+      - Stages:
+        - StagesTab: webui/StagesTab.md
+        - AllStagesPage: webui/AllStagesPage.md
+        - StagePage: webui/StagePage.md
+        - PoolPage: webui/PoolPage.md
+      - Storage:
+        - StorageTab: webui/StorageTab.md
+        - StoragePage: webui/StoragePage.md
+        - RDDPage: webui/RDDPage.md
+    - PrometheusResource: webui/PrometheusResource.md
+    - UIUtils: webui/UIUtils.md
+    - JettyUtils: webui/JettyUtils.md
