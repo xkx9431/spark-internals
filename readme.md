@@ -1,10 +1,10 @@
 # Apache Spark 源码分析 在线电子书
 
-[![CI](https://github.com/xkx9431/spark-internal/workflows/CI/badge.svg)](https://github.com/xkx9431/spark-internal/actions)
+[![CI](https://github.com/japila-books/apache-spark-internals/workflows/CI/badge.svg)](https://github.com/xkx9431/spark-internal/actions)
 
 ## ！
 本项目是基于 [The Internals of Apache Spark](https://books.japila.pl/apache-spark-internals)， 仅供学习用途， 不得用于转载，商用。（如需，需要联系原作者同意）
->  This is refer from [The Internals of Apache Spark](https://books.japila.pl/apache-spark-internals), please no bussiness intention, and any propose need source author [jaceklaskowski](https://github.com/jaceklaskowski)  permission.
+>  This is refer from [The Internals of Apache Spark](https://books.japila.pl/apache-spark-internals), please no bussiness intention, and any propose need source author [jaceklaskowski](https://github.com/jaceklaskowski)  permission. And we encourage the study of the original English version.
 
 ## 关于项目
 
