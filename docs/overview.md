@@ -1,6 +1,6 @@
 # {{ book.title }}
 
-[Apache Spark](http://spark.apache.org/) 是一个 **开源的分布式通用集群计算框架** 具备大多数 **内存数据处理引擎**的能力，可以在静态（批处理）或动态（流处理）的大规模数据上进行ETL、分析、机器学习和图计算，具有丰富简洁的高级API，同时支持Scala, Python, Java, R, 和SQL多个编程语言版本.
+[Apache Spark](http://spark.apache.org/) 是一个 **开源的分布式通用集群计算框架** 具备大多数 **内存数据处理引擎** 的能力，可以在静态（批处理）或动态（流处理）的大规模数据上进行ETL、分析、机器学习和图计算，具有丰富简洁的高级API，同时支持Scala, Python, Java, R, 和SQL多个编程语言版本.
 
 ![The Spark Platform](images/spark-platform.png)
 
@@ -169,7 +169,7 @@ Spark可以[将中间数据缓存在内存中以加快模型的建立和训练](
 
 ### 更容易完成ETL
 
-Spark开启 *ETL* 新时代，支持许多编程语言--Scala、Java、Python（不太可能是R）。你全都可以使用它们，也可以为特定问题挑选最好的。
+Spark开启了 *ETL* 新时代，支持众多编程语言--Scala、Java、Python（不太可能是R）。你全都可以使用它们，也可以为特定问题挑选最好的。
 
 特别是与其他语言和方法如Java中的MapReduce相比，Scala在Spark中的应用，使得模板代码大大减少。
 
