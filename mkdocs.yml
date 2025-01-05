@@ -212,7 +212,7 @@ nav:
     - OutputCommitCoordinator: OutputCommitCoordinator.md
     - Scheduler:
       - scheduler/index.md
-      - DAGScheduler: scheduler/DAGScheduler.md
+      - DAGScheduler: scheduler/DAGScheduler.cn.md
       - Stage: scheduler/Stage.md
       - ResultStage: scheduler/ResultStage.md
       - ShuffleMapStage: scheduler/ShuffleMapStage.md
