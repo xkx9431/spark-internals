@@ -1,53 +1,53 @@
 # DAGScheduler
 
 !!! note
-    The introduction that follows was highly influenced by the scaladoc of [org.apache.spark.scheduler.DAGScheduler](https://github.com/apache/spark/blob/master/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala). As `DAGScheduler` is a `private class` it does not appear in the official API documentation. You are strongly encouraged to read [the sources](https://github.com/apache/spark/blob/master/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala) and only then read this and the related pages afterwards.
+    以下介绍主要参考 [org.apache.spark.scheduler.DAGScheduler](https://github.com/apache/spark/blob/master/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala) 的 scaladoc。但由于 `DAGScheduler` 是 `private class`，它不会出现在官方 API 文档中, 因此强烈建议你先阅读 [源代码](https://github.com/apache/spark/blob/master/core/src/main/scala/org/apache/spark/scheduler/DAGScheduler.scala)，然后再阅读此页和相关页面。
 
-## Introduction
+## 介绍
 
-`DAGScheduler` is the scheduling layer of Apache Spark that implements **stage-oriented scheduling** using [Jobs](ActiveJob.md) and [Stages](Stage.md).
+`DAGScheduler` 是 Apache Spark 的调度层，使用 [Jobs](ActiveJob.md) 和 [Stages](Stage.md) 实现**stage 层面的调度**。
 
-`DAGScheduler` transforms a **logical execution plan** ([RDD lineage](../rdd/spark-rdd-lineage.md) of dependencies built using [RDD transformations](../rdd/spark-rdd-transformations.md)) to a **physical execution plan** (using [stages](Stage.md)).
+`DAGScheduler` 将**逻辑执行计划**（基于依赖关系的 [RDD lineage](../rdd/spark-rdd-lineage.md)，由 [RDD transformations](../rdd/spark-rdd-transformations.md) 构建）转化为**物理执行计划**（使用 [stages](Stage.md)）。
 
-![DAGScheduler Transforming RDD Lineage Into Stage DAG](../images/scheduler/dagscheduler-rdd-lineage-stage-dag.png)
+![DAGScheduler 将 RDD 衍生转化为 Stage DAG](../images/scheduler/dagscheduler-rdd-lineage-stage-dag.png)
 
-After an [action](../rdd/spark-rdd-actions.md) has been called on an `RDD`, [SparkContext](../SparkContext.md) hands over a logical plan to `DAGScheduler` that it in turn translates to a set of stages that are submitted as [TaskSets](TaskSet.md) for execution.
+在对 `RDD` 调用了 [action](../rdd/spark-rdd-actions.md) 之后，[SparkContext](../SparkContext.md) 将一个逻辑计划提交给 `DAGScheduler`，它随后转化为一组stages，作为 [TaskSets](TaskSet.md) 提交执行。
 
-![Executing action leads to new ResultStage and ActiveJob in DAGScheduler](../images/scheduler/dagscheduler-rdd-partitions-job-resultstage.png)
+![执行 action 导致新 ResultStage 和 ActiveJob 在 DAGScheduler 中](../images/scheduler/dagscheduler-rdd-partitions-job-resultstage.png)
 
-`DAGScheduler` works solely on the driver and is created as part of [SparkContext's initialization](../SparkContext.md) (right after [TaskScheduler](TaskScheduler.md) and [SchedulerBackend](SchedulerBackend.md) are ready).
+`DAGScheduler` 仅在Driver 端运行，并作为 [SparkContext 初始化](../SparkContext.md) 工作中一部分，其创建是在（ [TaskScheduler](TaskScheduler.md) 和 [SchedulerBackend](SchedulerBackend.md) 准备好之后）。
 
-![DAGScheduler as created by SparkContext with other services](../images/scheduler/dagscheduler-new-instance.png)
+![DAGScheduler 由 SparkContext 与其他服务共同创建](../images/scheduler/dagscheduler-new-instance.png)
 
-`DAGScheduler` does three things in Spark:
+`DAGScheduler` 在 Spark 有以下三个职责：
 
-* Computes an **execution DAG** (DAG of stages) for a job
-* Determines the [preferred locations](#preferred-locations) to run each task on
-* Handles failures due to **shuffle output files** being lost
+* 为给定的 job 计算一个可**执行 DAG**(stage 的 DAG)
+* 确定每个Task运行的[首选位置](#preferred-locations)
+* 处理因**shuffle 输出文件**丢失导致的失败
 
-DAGScheduler computes [a directed acyclic graph (DAG)](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of stages for each job, keeps track of which RDDs and stage outputs are materialized, and finds a minimal schedule to run jobs. It then submits stages to [TaskScheduler](TaskScheduler.md).
+DAGScheduler 为每个 job 计并算基于stage的[有向无环图 (DAG)](https://en.wikipedia.org/wiki/Directed_acyclic_graph)，跟踪哪些 RDD 和stage的输出需要被保存，并找到一个最小的计划来运行这些jobs。然后将stages提交给 [TaskScheduler](TaskScheduler.md)。
 
 ![DAGScheduler.submitJob](../images/scheduler/dagscheduler-submitjob.png)
 
-In addition to coming up with the execution DAG, DAGScheduler also determines the preferred locations to run each task on, based on the current cache status, and passes the information to [TaskScheduler](TaskScheduler.md).
+除了计算得到可执行的 DAG 之外，DAGScheduler 还根据当前的缓存状态确定每个Task的首选位置信息，并将信息传递给 [TaskScheduler](TaskScheduler.md)。
 
-DAGScheduler tracks which rdd/spark-rdd-caching.md[RDDs are cached (or persisted)] to avoid "recomputing" them, i.e. redoing the map side of a shuffle. DAGScheduler remembers what ShuffleMapStage.md[ShuffleMapStage]s have already produced output files (that are stored in [BlockManager](../storage/BlockManager.md)s).
+DAGScheduler 会追踪哪些 [RDD 被缓存（或持久化）](..rdd/spark-rdd-caching.md) 以避免“重新计算”它们，即避免map端的重新shuffle操作。DAGScheduler 会记录哪些 ShuffleMapStage.md[ShuffleMapStage] 已经产生了输出文件（存储在 [BlockManager](../storage/BlockManager.md) 中）。
 
-`DAGScheduler` is only interested in cache location coordinates, i.e. host and executor id, per partition of a RDD.
+`DAGScheduler` 只对缓存位置坐标感兴趣，即每个 RDD 分区的主机和执行器 Excutor ID。
 
-Furthermore, it handles failures due to shuffle output files being lost, in which case old stages may need to be resubmitted. Failures within a stage that are not caused by shuffle file loss are handled by the TaskScheduler itself, which will retry each task a small number of times before cancelling the whole stage.
+此外，它还处理由于 shuffle 输出文件丢失导致的失败，在这种情况下可能需要重新提交Stage。而那些不是由 shuffle 文件丢失引发的阶段内失败，则由 TaskScheduler 处理，它将重试每个任务几次，然后取消整个阶段。
 
-DAGScheduler uses an **event queue architecture** in which a thread can post `DAGSchedulerEvent` events, e.g. a new job or stage being submitted, that DAGScheduler reads and executes sequentially. See the section <<event-loop, Internal Event Loop - dag-scheduler-event-loop>>.
+DAGScheduler 使用 **事件队列架构**，其中一个线程可以发布 `DAGSchedulerEvent` 事件，例如提交的新 job 或阶段，DAGScheduler 读取并顺序执行这些事件。参见章节<event-loop, Internal Event Loop - dag-scheduler-event-loop>。
 
-DAGScheduler runs stages in topological order.
+DAGScheduler 按拓扑顺序运stage。
 
-DAGScheduler uses [SparkContext](../SparkContext.md), [TaskScheduler](TaskScheduler.md), LiveListenerBus.md[], MapOutputTracker.md[MapOutputTracker] and storage:BlockManager.md[BlockManager] for its services. However, at the very minimum, DAGScheduler takes a `SparkContext` only (and requests `SparkContext` for the other services).
+DAGScheduler 使用 [SparkContext](../SparkContext.md)，[TaskScheduler](TaskScheduler.md)[LiveListenerBus](LiveListenerBus.md)，[MapOutputTracker](MapOutputTracker.md) 和 [BlockManager](storage:BlockManager.md) 作为其服务。当然，最基本的，DAGScheduler 只需要一个 `SparkContext`（并请求 `SparkContext` 获取其他服务）。
 
-When DAGScheduler schedules a job as a result of rdd/index.md#actions[executing an action on a RDD] or [calling SparkContext.runJob() method directly](../SparkContext.md#runJob), it spawns parallel tasks to compute (partial) results per partition.
+当 DAGScheduler通过[执行RDD ACTION](rdd/index.md#actions) 或者 [直接调用 SparkContext.runJob()方法](../SparkContext.md#runJob)时,它会产生并行任务来计算每个分区的（部分）结果。
 
 ## Creating Instance
 
-`DAGScheduler` takes the following to be created:
+`DAGScheduler` 创建时会有以下成员依赖:
 
 * <span id="sc"> [SparkContext](../SparkContext.md)
 * <span id="taskScheduler"> [TaskScheduler](TaskScheduler.md)
@@ -57,9 +57,9 @@ When DAGScheduler schedules a job as a result of rdd/index.md#actions[executing 
 * <span id="env"> [SparkEnv](../SparkEnv.md)
 * <span id="clock"> `Clock`
 
-`DAGScheduler` is created when [SparkContext](../SparkContext.md) is created.
+`DAGScheduler` 是在 [SparkContext](../SparkContext.md) 创建的 时候被创建.
 
-While being created, `DAGScheduler` requests the [TaskScheduler](#taskScheduler) to [associate itself with](TaskScheduler.md#setDAGScheduler) and requests [DAGScheduler Event Bus](#eventProcessLoop) to start accepting events.
+创建完成之后, `DAGScheduler` 会请求 [TaskScheduler](#taskScheduler) 与 [自己关联](TaskScheduler.md#setDAGScheduler) 并请求 [DAGScheduler Event Bus](#eventProcessLoop) 开始接受事件处理.
 
 ## <span id="metricsSource"><span id="DAGSchedulerSource"> DAGSchedulerSource
 
