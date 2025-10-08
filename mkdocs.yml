@@ -521,6 +521,7 @@ nav:
     - NewHadoopRDD: rdd/NewHadoopRDD.md
     - ParallelCollectionRDD: rdd/ParallelCollectionRDD.md
     - RDD: rdd/RDD.md
+    - RDD (中文): rdd/RDD.cn.md
     - ReliableCheckpointRDD: rdd/ReliableCheckpointRDD.md
     - ShuffledRDD: rdd/ShuffledRDD.md
     - SubtractedRDD: rdd/SubtractedRDD.md
